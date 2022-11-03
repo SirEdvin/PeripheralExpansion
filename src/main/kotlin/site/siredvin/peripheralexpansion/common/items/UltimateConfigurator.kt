@@ -41,7 +41,7 @@ class UltimateConfigurator: DescriptiveItem(Properties().stacksTo(1)) {
         }
     }
 
-    private fun getActiveMode(stack: ItemStack): ConfiguratorMode? {
+    fun getActiveMode(stack: ItemStack): ConfiguratorMode? {
         val data = stack.tag ?: return null
         if (!data.contains(ACTIVE_MOD_NAME))
             return null

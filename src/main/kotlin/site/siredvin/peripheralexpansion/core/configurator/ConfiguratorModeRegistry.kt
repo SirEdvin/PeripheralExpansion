@@ -1,5 +1,7 @@
 package site.siredvin.peripheralexpansion.core.configurator
 
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.state.BlockState
 import site.siredvin.peripheralexpansion.common.setup.Blocks

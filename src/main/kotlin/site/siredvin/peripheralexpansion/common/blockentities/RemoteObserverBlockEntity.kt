@@ -8,17 +8,18 @@ import net.minecraft.nbt.NbtUtils
 import net.minecraft.nbt.Tag
 import net.minecraft.world.level.Level
 import net.minecraft.world.level.block.state.BlockState
+import site.siredvin.peripheralexpansion.common.configuration.PeripheralExpansionConfig
 import site.siredvin.peripheralexpansion.common.setup.BlockEntityTypes
 import site.siredvin.peripheralexpansion.computercraft.peripheral.RemoteObserverPeripheral
 import site.siredvin.peripheralexpansion.world.BlockStateUpdateEventBus
-import site.siredvin.peripheralium.api.blocks.IBlockObservingTileEntity
-import site.siredvin.peripheralium.common.blockentities.PeripheralBlockEntity
+import site.siredvin.peripheralium.api.blockentities.IObservingBlockEntity
+import site.siredvin.peripheralium.common.blockentities.MutableNBTBlockEntity
 import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
 import site.siredvin.peripheralium.util.representation.LuaRepresentation
 import site.siredvin.peripheralium.util.representation.stateProperties
 
 class RemoteObserverBlockEntity(blockPos: BlockPos, blockState: BlockState) :
-    PeripheralBlockEntity<RemoteObserverPeripheral>(BlockEntityTypes.REMOTE_OBSERVER, blockPos, blockState), IBlockObservingTileEntity {
+    MutableNBTBlockEntity<RemoteObserverPeripheral>(BlockEntityTypes.REMOTE_OBSERVER, blockPos, blockState), IObservingBlockEntity {
 
     companion object {
         const val TRACKED_BLOCKS_TAG = "trackedBlocks"
@@ -30,8 +31,30 @@ class RemoteObserverBlockEntity(blockPos: BlockPos, blockState: BlockState) :
     private val facing: Direction
         get() = blockState.getValue(GenericBlockEntityBlock.FACING)
 
+    val trackedBlocksView: List<BlockPos>
+        get() = trackedBlocks
+
     override fun createPeripheral(side: Direction): RemoteObserverPeripheral {
         return RemoteObserverPeripheral(this)
+    }
+
+    fun isPosApplicable(pos: BlockPos): Boolean {
+        return pos.closerThan(this.blockPos, PeripheralExpansionConfig.remoteObserverMaxRange.toDouble())
+    }
+
+    /**
+     * Returns true if block was added to tracking and false if removed
+     */
+    fun togglePos(pos: BlockPos): Boolean {
+        val blockAdded = if (trackedBlocks.contains(pos)) {
+            removePosToTrack(pos)
+            false
+        } else {
+            addPosToTrack(pos)
+            true
+        }
+        pushInternalDataChangeToClient()
+        return blockAdded
     }
 
     fun addPosToTrack(pos: BlockPos) {
@@ -48,17 +71,16 @@ class RemoteObserverBlockEntity(blockPos: BlockPos, blockState: BlockState) :
         BlockStateUpdateEventBus.removeBlockPos(trackedBlocks)
     }
 
-    override fun saveAdditional(compound: CompoundTag) {
-        super.saveAdditional(compound)
+    override fun saveInternalData(data: CompoundTag): CompoundTag {
         val trackedBlockTag = ListTag()
         trackedBlocks.forEach { trackedBlockTag.add(NbtUtils.writeBlockPos(it)) }
-        compound.put(TRACKED_BLOCKS_TAG, trackedBlockTag)
+        data.put(TRACKED_BLOCKS_TAG, trackedBlockTag)
+        return data
     }
 
-    override fun load(compound: CompoundTag) {
-        super.load(compound)
-        if (compound.contains(TRACKED_BLOCKS_TAG)) {
-            val internalList = compound.getList(TRACKED_BLOCKS_TAG, Tag.TAG_COMPOUND.toInt())
+    override fun loadInternalData(data: CompoundTag) {
+        if (data.contains(TRACKED_BLOCKS_TAG)) {
+            val internalList = data.getList(TRACKED_BLOCKS_TAG, Tag.TAG_COMPOUND.toInt())
             internalList.forEach { addPosToTrack(NbtUtils.readBlockPos(it as CompoundTag)) }
         }
     }

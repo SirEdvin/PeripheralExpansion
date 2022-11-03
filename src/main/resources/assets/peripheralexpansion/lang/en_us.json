@@ -4,5 +4,8 @@
 
   "text.peripheralexpansion.remote_observer_mode": "  Remote observer configuration",
   "text.peripheralexpansion.active_configuration_mode": "Active configuration mode:",
-  "text.peripheralexpansion.configuration_target_block": "Target block %s"
+  "text.peripheralexpansion.configuration_target_block": "Target block %s",
+  "text.peripheralexpansion.remote_observer_too_far": "Remote observer too far from this block",
+  "text.peripheralexpansion.remote_observer_block_track_added": "Remote observer now tracks this block",
+  "text.peripheralexpansion.remote_observer_block_track_removed": "Remote observer will not track this block from now"
 }
