@@ -16,7 +16,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 class FlexibleRealityAnchorTileEntity(blockPos: BlockPos, blockState: BlockState) :
-    MutableNBTBlockEntity<OwnedPeripheral<*>>(BlockEntityTypes.REMOTE_OBSERVER, blockPos, blockState){
+    MutableNBTBlockEntity<OwnedPeripheral<*>>(BlockEntityTypes.FLEXIBLE_REALITY_ANCHOR, blockPos, blockState){
 
     companion object {
         private val MIMIC_TAG = "mimic"
@@ -41,7 +41,7 @@ class FlexibleRealityAnchorTileEntity(blockPos: BlockPos, blockState: BlockState
         if (mimic != null) {
             val blockName: ResourceLocation = Registry.BLOCK.getKey(mimic.block)
             // TODO: add blacklist check
-            if (blockName != Registry.BLOCK.defaultKey)
+            if (blockName == Registry.BLOCK.defaultKey)
                 return
         }
         this._mimic = mimic

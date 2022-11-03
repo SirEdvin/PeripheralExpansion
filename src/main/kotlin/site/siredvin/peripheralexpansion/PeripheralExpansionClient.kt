@@ -9,8 +9,8 @@ import site.siredvin.peripheralexpansion.common.setup.Blocks
 
 object PeripheralExpansionClient: ClientModInitializer {
     override fun onInitializeClient() {
-//        WorldRenderEvents.AFTER_TRANSLUCENT.register(UltimateConfiguratorOutlineRender::render)
-        ModelLoadingRegistry.INSTANCE.registerModelProvider { _, _ -> ExpansionModelProvider() }
         BlockRenderLayerMap.INSTANCE.putBlock(Blocks.FLEXIBLE_REALITY_ANCHOR, RenderType.translucent())
+//        WorldRenderEvents.AFTER_TRANSLUCENT.register(UltimateConfiguratorOutlineRender::render)
+        ModelLoadingRegistry.INSTANCE.registerResourceProvider { ExpansionModelProvider() }
     }
 }

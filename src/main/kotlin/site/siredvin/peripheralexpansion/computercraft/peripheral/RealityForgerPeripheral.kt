@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty
 import net.minecraft.world.level.block.state.properties.EnumProperty
 import net.minecraft.world.level.block.state.properties.IntegerProperty
 import net.minecraft.world.level.block.state.properties.Property
+import site.siredvin.peripheralexpansion.PeripheralExpansion
 import site.siredvin.peripheralexpansion.common.blockentities.FlexibleRealityAnchorTileEntity
 import site.siredvin.peripheralexpansion.common.blockentities.RealityForgerBlockEntity
 import site.siredvin.peripheralexpansion.common.blocks.FlexibleRealityAnchor
@@ -116,15 +117,19 @@ class RealityForgerPeripheral(blockEntity: RealityForgerBlockEntity
                 realityMirror.lightLevel = (it.value as Number).toInt()
             }
         }
-        realityMirror.pushInternalDataChangeToClient(targetState)
+        realityMirror.setMimic(targetState)
     }
 
     @LuaFunction(mainThread = true)
     fun detectAnchors(): List<Map<String, Any>> {
         val data = mutableListOf<Map<String, Any>>()
         ScanUtils.traverseBlocks(level!!, pos, interactionRadius, {blockState, pos ->
-            if (blockState.`is`(Blocks.FLEXIBLE_REALITY_ANCHOR)) {
+            val blockEntity = level!!.getBlockEntity(pos)
+            if (blockEntity is FlexibleRealityAnchorTileEntity) {
                 data.add(LuaRepresentation.forBlockPos(pos, Direction.EAST, this.pos))
+            }
+            if (blockState.`is`(Blocks.FLEXIBLE_REALITY_ANCHOR)) {
+                PeripheralExpansion.LOGGER.warn(blockEntity)
             }
         })
         return data
@@ -188,7 +193,7 @@ class RealityForgerPeripheral(blockEntity: RealityForgerBlockEntity
         val targetState = findBlock(table) ?: return MethodResult.of(null, "Hm, I need to implement change without block")
         if (level == null)
             return MethodResult.of(null, "Level is not loaded, what?")
-        ScanUtils.traverseBlocks(peripheralOwner.level!!, peripheralOwner.pos, interactionRadius, {blockState, blockPos ->
+        ScanUtils.traverseBlocks(level!!, pos, interactionRadius, {blockState, blockPos ->
             val blockEntity = level!!.getBlockEntity(blockPos)
             if (blockEntity is FlexibleRealityAnchorTileEntity) {
                 forgeRealityTileEntity(blockEntity, targetState, table)

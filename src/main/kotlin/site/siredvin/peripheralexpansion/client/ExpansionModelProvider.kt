@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation
 class ExpansionModelProvider: ModelResourceProvider {
 
     companion object {
-        val FLEXIBLE_REALITY_ANCHOR = ResourceLocation("peripheralexpansion:flexible_reality_anchor")
+        val FLEXIBLE_REALITY_ANCHOR = ResourceLocation("peripheralexpansion:block/flexible_reality_anchor")
     }
 
     override fun loadModelResource(resourceId: ResourceLocation, context: ModelProviderContext): UnbakedModel? {
