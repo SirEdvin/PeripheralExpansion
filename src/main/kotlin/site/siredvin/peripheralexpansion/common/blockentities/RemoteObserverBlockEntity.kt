@@ -78,11 +78,12 @@ class RemoteObserverBlockEntity(blockPos: BlockPos, blockState: BlockState) :
         return data
     }
 
-    override fun loadInternalData(data: CompoundTag) {
+    override fun loadInternalData(data: CompoundTag, state: BlockState?): BlockState {
         if (data.contains(TRACKED_BLOCKS_TAG)) {
             val internalList = data.getList(TRACKED_BLOCKS_TAG, Tag.TAG_COMPOUND.toInt())
             internalList.forEach { addPosToTrack(NbtUtils.readBlockPos(it as CompoundTag)) }
         }
+        return state ?: blockState
     }
 
     override fun handleTick(level: Level, pos: BlockPos, state: BlockState) {

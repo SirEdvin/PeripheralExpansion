@@ -4,6 +4,7 @@ import dan200.computercraft.api.lua.IArguments
 import dan200.computercraft.api.lua.LuaException
 import dan200.computercraft.api.lua.LuaFunction
 import dan200.computercraft.api.lua.MethodResult
+import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.core.Registry
 import net.minecraft.resources.ResourceLocation
@@ -16,6 +17,7 @@ import site.siredvin.peripheralexpansion.PeripheralExpansion
 import site.siredvin.peripheralexpansion.common.blockentities.FlexibleRealityAnchorTileEntity
 import site.siredvin.peripheralexpansion.common.blockentities.RealityForgerBlockEntity
 import site.siredvin.peripheralexpansion.common.blocks.FlexibleRealityAnchor
+import site.siredvin.peripheralexpansion.common.configuration.PeripheralExpansionConfig
 import site.siredvin.peripheralexpansion.common.setup.Blocks
 import site.siredvin.peripheralium.computercraft.peripheral.OwnedPeripheral
 import site.siredvin.peripheralium.computercraft.peripheral.owner.BlockEntityPeripheralOwner
@@ -39,12 +41,19 @@ class RealityForgerPeripheral(blockEntity: RealityForgerBlockEntity
     }
 
     override val isEnabled: Boolean
-        get() = true
+        get() = PeripheralExpansionConfig.enableRealityForger
 
     val interactionRadius: Int
-        get() = 8
+        get() = PeripheralExpansionConfig.realityForgerMaxRange
 
-//     Please, don't blame me for this untyped garbage code
+    override val peripheralConfiguration: MutableMap<String, Any>
+        get() {
+            val data = super.peripheralConfiguration
+            data["interactionRadius"] = interactionRadius
+            return data
+        }
+
+    //     Please, don't blame me for this untyped garbage code
 //     If you can handle it better, you're welcome
     @Throws(LuaException::class)
     private fun applyBlockAttrs(state: BlockState, blockAttrs: Map<*, *>): BlockState {
@@ -90,9 +99,11 @@ class RealityForgerPeripheral(blockEntity: RealityForgerBlockEntity
     private fun findBlock(table: Map<*, *>): BlockState? {
         if (table.containsKey("block")) {
             val blockID = table["block"].toString()
-            // TODO: add blacklist
-//            if (ProgressivePeripheralsConfig.realityForgerBlacklist.contains(blockID)) throw LuaException("You cannot use this block, is blacklisted")
-            val block = Registry.BLOCK.get(ResourceLocation(blockID)) ?: throw LuaException(String.format("Cannot find block %s", table["block"]))
+            if (PeripheralExpansionConfig.realityForgerBlockList.contains(blockID))
+                throw LuaException("You cannot use this block, is blocklisted")
+            val block = Registry.BLOCK.get(ResourceLocation(blockID))
+            if (block == net.minecraft.world.level.block.Blocks.AIR)
+                throw LuaException(String.format("Cannot find block %s", table["block"]))
             var targetState = block.defaultBlockState()
             if (table.containsKey("attrs")) {
                 val blockAttrs = table["attrs"] as? Map<*, *> ?: throw LuaException("attrs should be a table")
@@ -105,7 +116,7 @@ class RealityForgerPeripheral(blockEntity: RealityForgerBlockEntity
 
     private fun forgeRealityTileEntity(
         realityMirror: FlexibleRealityAnchorTileEntity,
-        targetState: BlockState,
+        targetState: BlockState?,
         appearanceTable: Map<*, *>,
     ) {
         appearanceTable.forEach {
@@ -117,7 +128,11 @@ class RealityForgerPeripheral(blockEntity: RealityForgerBlockEntity
                 realityMirror.lightLevel = (it.value as Number).toInt()
             }
         }
-        realityMirror.setMimic(targetState)
+        if (targetState != null) {
+            realityMirror.setMimic(targetState)
+        } else {
+            realityMirror.pushInternalDataChangeToClient()
+        }
     }
 
     @LuaFunction(mainThread = true)
@@ -126,7 +141,7 @@ class RealityForgerPeripheral(blockEntity: RealityForgerBlockEntity
         ScanUtils.traverseBlocks(level!!, pos, interactionRadius, {blockState, pos ->
             val blockEntity = level!!.getBlockEntity(pos)
             if (blockEntity is FlexibleRealityAnchorTileEntity) {
-                data.add(LuaRepresentation.forBlockPos(pos, Direction.EAST, this.pos))
+                data.add(LuaRepresentation.forBlockPos(pos, this.peripheralOwner.facing, this.pos))
             }
             if (blockState.`is`(Blocks.FLEXIBLE_REALITY_ANCHOR)) {
                 PeripheralExpansion.LOGGER.warn(blockEntity)
@@ -144,53 +159,48 @@ class RealityForgerPeripheral(blockEntity: RealityForgerBlockEntity
         val appearanceTable = arguments.getTable(1)
         val entity = level!!.getBlockEntity(targetPosition) as? FlexibleRealityAnchorTileEntity
             ?: return MethodResult.of(false, "Incorrect coordinates")
-        val targetState = findBlock(appearanceTable) ?: return MethodResult.of(null, "Cannot find valid block to transform to")
+        val targetState = findBlock(appearanceTable)
         forgeRealityTileEntity(entity, targetState, appearanceTable)
         return MethodResult.of(true)
     }
 
 
-//    @LuaFunction(mainThread = true)
-//    @Throws(LuaException::class)
-//    fun forgeRealityPieces(arguments: IArguments): MethodResult {
-//        val center: BlockPos = getPos()
-//        val world: World = getWorld()
-//        val poses: MutableList<BlockPos> = ArrayList<BlockPos>()
-//        for (value in arguments.getTable(0).values) {
-//            if (value !is Map<*, *>) throw LuaException("First argument should be list of block positions")
-//            poses.add(LuaUtils.convertToBlockPos(center, value as Map<*, *>?))
-//        }
-//        val entities: MutableList<FlexibleRealityAnchorTileEntity> = ArrayList<FlexibleRealityAnchorTileEntity>()
-//        for (pos in poses) {
-//            if (!CheckUtils.radiusCorrect(center, pos, _getInteractionRadius())) return MethodResult.of(
-//                null,
-//                "One of blocks are too far away"
-//            )
-//            val entity: TileEntity = world.getBlockEntity(pos) as? FlexibleRealityAnchorTileEntity
-//                ?: return MethodResult.of(
-//                    false,
-//                    java.lang.String.format("Incorrect coordinates (%d, %d, %d)", pos.getX(), pos.getY(), pos.getZ())
-//                )
-//            entities.add(entity as FlexibleRealityAnchorTileEntity)
-//        }
-//        val table = arguments.getTable(1)
-//        val blockFindResult: Pair<Boolean, BlockState> = findBlock(table)
-//        entities.forEach(Consumer<FlexibleRealityAnchorTileEntity> { entity: FlexibleRealityAnchorTileEntity ->
-//            forgeRealityTileEntity(
-//                entity,
-//                blockFindResult.getRight(),
-//                table,
-//                blockFindResult.getLeft()
-//            )
-//        })
-//        return MethodResult.of(true)
-//    }
-//
+    @LuaFunction(mainThread = true)
+    @Throws(LuaException::class)
+    fun forgeRealityPieces(arguments: IArguments): MethodResult {
+        val poses: MutableList<BlockPos> = mutableListOf()
+        for (value in arguments.getTable(0).values) {
+            if (value !is Map<*, *>) throw LuaException("First argument should be list of block positions")
+            poses.add(LuaInterpretation.asBlockPos(peripheralOwner.pos, value, peripheralOwner.facing))
+        }
+        val entities: MutableList<FlexibleRealityAnchorTileEntity> = ArrayList<FlexibleRealityAnchorTileEntity>()
+        for (pos in poses) {
+            if (radiusCorrect(pos, peripheralOwner.pos, interactionRadius))
+                return MethodResult.of(null, "One of blocks are too far away")
+            val entity = level!!.getBlockEntity(pos) as? FlexibleRealityAnchorTileEntity
+                ?: return MethodResult.of(
+                    false,
+                    "One of provided coordinate are not correct"
+                )
+            entities.add(entity)
+        }
+        val table = arguments.getTable(1)
+        val targetState = findBlock(table)
+        entities.forEach {
+            forgeRealityTileEntity(
+                it,
+                targetState,
+                table,
+            )
+        }
+        return MethodResult.of(true)
+    }
+
     @LuaFunction(mainThread = true)
     @Throws(LuaException::class)
     fun forgeReality(arguments: IArguments): MethodResult {
         val table = arguments.getTable(0)
-        val targetState = findBlock(table) ?: return MethodResult.of(null, "Hm, I need to implement change without block")
+        val targetState = findBlock(table)
         if (level == null)
             return MethodResult.of(null, "Level is not loaded, what?")
         ScanUtils.traverseBlocks(level!!, pos, interactionRadius, {blockState, blockPos ->

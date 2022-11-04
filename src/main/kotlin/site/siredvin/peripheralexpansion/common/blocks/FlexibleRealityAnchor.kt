@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntity
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.StateDefinition
 import net.minecraft.world.level.block.state.properties.BooleanProperty
+import net.minecraft.world.level.block.state.properties.Property
 import net.minecraft.world.phys.shapes.CollisionContext
 import net.minecraft.world.phys.shapes.EntityCollisionContext
 import net.minecraft.world.phys.shapes.Shapes
@@ -29,7 +30,7 @@ class FlexibleRealityAnchor: BaseNBTBlock<FlexibleRealityAnchorTileEntity>(
         val SKY_LIGHT_PASSABLE: BooleanProperty = BooleanProperty.create("sky_light_passable")
         val INVISIBLE: BooleanProperty = BooleanProperty.create("invisible")
 
-        val SAVABLE_PROPERTIES = listOf(PLAYER_PASSABLE, LIGHT_PASSABLE, SKY_LIGHT_PASSABLE, INVISIBLE)
+        val SAVABLE_PROPERTIES = listOf(CONFIGURED, PLAYER_PASSABLE, LIGHT_PASSABLE, SKY_LIGHT_PASSABLE, INVISIBLE)
     }
 
     init {
@@ -42,6 +43,9 @@ class FlexibleRealityAnchor: BaseNBTBlock<FlexibleRealityAnchorTileEntity>(
                 .setValue(INVISIBLE, false)
         )
     }
+
+    override val savableProperties: List<Property<*>>
+        get() = SAVABLE_PROPERTIES
 
     override fun newBlockEntity(blockPos: BlockPos, blockState: BlockState): BlockEntity {
         return FlexibleRealityAnchorTileEntity(blockPos, blockState)
@@ -81,10 +85,6 @@ class FlexibleRealityAnchor: BaseNBTBlock<FlexibleRealityAnchorTileEntity>(
     override fun getRenderShape(state: BlockState): RenderShape {
         return if (state.getValue(INVISIBLE)) RenderShape.INVISIBLE else super.getRenderShape(state)
     }
-
-//    fun savableProperties(): List<Property<*>?>? {
-//        return SAVABLE_PROPERTIES
-//    }
 
     override fun useShapeForLightOcclusion(state: BlockState): Boolean {
         return true

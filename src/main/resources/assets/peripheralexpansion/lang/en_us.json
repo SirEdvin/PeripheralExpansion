@@ -1,6 +1,8 @@
 {
   "item.peripheralexpansion.ultimate_configurator": "Ultimate configurator",
   "block.peripheralexpansion.remote_observer": "Remote observer",
+  "block.peripheralexpansion.reality_forger": "Reality forger",
+  "block.peripheralexpansion.flexible_reality_anchor": "Flexible reality anchor",
 
   "text.peripheralexpansion.remote_observer_mode": "  Remote observer configuration",
   "text.peripheralexpansion.active_configuration_mode": "Active configuration mode:",

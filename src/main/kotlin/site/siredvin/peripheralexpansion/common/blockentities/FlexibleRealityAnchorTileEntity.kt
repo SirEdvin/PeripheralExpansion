@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation
 import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.block.state.properties.BooleanProperty
 import site.siredvin.peripheralexpansion.common.blocks.FlexibleRealityAnchor
+import site.siredvin.peripheralexpansion.common.configuration.PeripheralExpansionConfig
 import site.siredvin.peripheralexpansion.common.setup.BlockEntityTypes
 import site.siredvin.peripheralium.common.blockentities.MutableNBTBlockEntity
 import site.siredvin.peripheralium.computercraft.peripheral.OwnedPeripheral
@@ -37,11 +38,10 @@ class FlexibleRealityAnchorTileEntity(blockPos: BlockPos, blockState: BlockState
         }
 
     fun setMimic(mimic: BlockState?, state: BlockState? = null, skipUpdate: Boolean = false) {
-        val realState = state ?: blockState
+        val realState = state ?: pendingState ?: blockState
         if (mimic != null) {
             val blockName: ResourceLocation = Registry.BLOCK.getKey(mimic.block)
-            // TODO: add blacklist check
-            if (blockName == Registry.BLOCK.defaultKey)
+            if (blockName == Registry.BLOCK.defaultKey || PeripheralExpansionConfig.realityForgerBlockList.contains(blockName.toString()))
                 return
         }
         this._mimic = mimic
@@ -61,11 +61,16 @@ class FlexibleRealityAnchorTileEntity(blockPos: BlockPos, blockState: BlockState
         throw IllegalCallerException("You should not call this function at all")
     }
 
-    override fun loadInternalData(data: CompoundTag) {
+    override fun pushInternalDataChangeToClient(state: BlockState?) {
+        super.pushInternalDataChangeToClient(state ?: pendingState)
+    }
+
+    override fun loadInternalData(data: CompoundTag, state: BlockState?): BlockState {
         if (data.contains(MIMIC_TAG))
-            setMimic(NbtUtils.readBlockState(data.getCompound(MIMIC_TAG)), blockState, true)
+            setMimic(NbtUtils.readBlockState(data.getCompound(MIMIC_TAG)), state ?: blockState, true)
         if (data.contains(LIGHT_LEVEL_TAG))
             this.lightLevel = data.getInt(LIGHT_LEVEL_TAG)
+        return pendingState!!
     }
 
     override fun saveInternalData(data: CompoundTag): CompoundTag {
