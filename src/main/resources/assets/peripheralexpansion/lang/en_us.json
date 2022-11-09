@@ -3,6 +3,7 @@
   "block.peripheralexpansion.remote_observer": "Remote observer",
   "block.peripheralexpansion.reality_forger": "Reality forger",
   "block.peripheralexpansion.flexible_reality_anchor": "Flexible reality anchor",
+  "block.peripheralexpansion.item_reader_pedestal": "Item reader pedestal",
 
   "text.peripheralexpansion.remote_observer_mode": "  Remote observer configuration",
   "text.peripheralexpansion.active_configuration_mode": "Active configuration mode:",

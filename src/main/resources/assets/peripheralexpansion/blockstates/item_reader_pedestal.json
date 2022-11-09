@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=north": {"model": "peripheralexpansion:block/item_reader_pedestal", "x":  90, "y": 0},
+    "facing=east": {"model": "peripheralexpansion:block/item_reader_pedestal", "x":  90, "y": 90},
+    "facing=west": {"model": "peripheralexpansion:block/item_reader_pedestal", "x":  90, "y": 270},
+    "facing=south": {"model": "peripheralexpansion:block/item_reader_pedestal", "x":  90, "y": 180},
+    "facing=up": {"model": "peripheralexpansion:block/item_reader_pedestal"},
+    "facing=down": {"model": "peripheralexpansion:block/item_reader_pedestal", "x": 180}
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "peripheralexpansion:block/base_pedestal",
+  "textures": {
+    "1": "peripheralexpansion:block/peripheral_casing",
+    "particle": "peripheralexpansion:block/peripheral_casing"
+  }
+}

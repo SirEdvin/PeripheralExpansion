@@ -3,6 +3,7 @@ package site.siredvin.peripheralexpansion.common.setup
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.minecraft.world.level.block.entity.BlockEntityType
 import site.siredvin.peripheralexpansion.common.blockentities.FlexibleRealityAnchorTileEntity
+import site.siredvin.peripheralexpansion.common.blockentities.ItemReaderBlockEntity
 import site.siredvin.peripheralexpansion.common.blockentities.RealityForgerBlockEntity
 import site.siredvin.peripheralexpansion.common.blockentities.RemoteObserverBlockEntity
 import site.siredvin.peripheralexpansion.ext.register
@@ -18,6 +19,9 @@ object BlockEntityTypes {
     val FLEXIBLE_REALITY_ANCHOR: BlockEntityType<FlexibleRealityAnchorTileEntity> = FabricBlockEntityTypeBuilder.create(
         { blockPos, blockState ->  FlexibleRealityAnchorTileEntity(blockPos, blockState)}, Blocks.FLEXIBLE_REALITY_ANCHOR
     ).build().register("flexible_reality_anchor")
+    val ITEM_READER = FabricBlockEntityTypeBuilder.create(
+        {blockPos, blockState -> ItemReaderBlockEntity(blockPos, blockState)}, Blocks.ITEM_READER_PEDESTAL
+    ).build().register("item_reader")
 
     fun doSomething() {
 

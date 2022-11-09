@@ -43,7 +43,7 @@ class RealityForgerPeripheral(blockEntity: RealityForgerBlockEntity
     override val isEnabled: Boolean
         get() = PeripheralExpansionConfig.enableRealityForger
 
-    val interactionRadius: Int
+    private val interactionRadius: Int
         get() = PeripheralExpansionConfig.realityForgerMaxRange
 
     override val peripheralConfiguration: MutableMap<String, Any>

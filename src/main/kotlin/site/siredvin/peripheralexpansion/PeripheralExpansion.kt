@@ -2,6 +2,7 @@ package site.siredvin.peripheralexpansion
 import com.mojang.brigadier.CommandDispatcher
 import net.fabricmc.api.ModInitializer
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback
+import net.fabricmc.fabric.api.transfer.v1.item.ItemStorage
 import net.minecraft.commands.CommandSourceStack
 import net.minecraft.commands.Commands
 import net.minecraftforge.api.ModLoadingContext
@@ -27,6 +28,8 @@ object PeripheralExpansion: ModInitializer {
         Items.doSomething()
         ModLoadingContext.registerConfig(MOD_ID, ModConfig.Type.COMMON, ConfigHolder.COMMON_SPEC)
         registerCommands()
+
+        ItemStorage.SIDED.registerForBlockEntity({entity, _ -> entity.inventoryStorage}, BlockEntityTypes.ITEM_READER)
     }
 
     fun registerCommands() {
