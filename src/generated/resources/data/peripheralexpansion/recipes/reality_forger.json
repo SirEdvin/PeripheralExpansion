@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "SDS",
+    "SPS",
+    "SSS"
+  ],
+  "key": {
+    "P": {
+      "item": "peripheralexpansion:peripheral_casing"
+    },
+    "S": {
+      "item": "peripheralexpansion:flexible_reality_anchor"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "peripheralexpansion:reality_forger"
+  }
+}

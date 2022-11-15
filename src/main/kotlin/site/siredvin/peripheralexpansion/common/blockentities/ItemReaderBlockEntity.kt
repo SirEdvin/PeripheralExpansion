@@ -22,14 +22,6 @@ class ItemReaderBlockEntity(blockPos: BlockPos, blockState: BlockState) : Mutabl
 
     private class ExtraSimpleStorage(private val itemReaderBlockEntity: ItemReaderBlockEntity): SimpleContainer(1) {
         override fun setChanged() {
-            val side = if(itemReaderBlockEntity.level == null) {
-                "ugly"
-            }else if (itemReaderBlockEntity.level!!.isClientSide){
-                "client"
-            } else {
-                "server"
-            }
-            println("Set changed called for ${itemReaderBlockEntity.blockPos} from $side, inventory ${this.getItem(0)}")
             itemReaderBlockEntity.pushInternalDataChangeToClient()
         }
     }
@@ -51,13 +43,6 @@ class ItemReaderBlockEntity(blockPos: BlockPos, blockState: BlockState) : Mutabl
     }
 
     override fun loadInternalData(data: CompoundTag, state: BlockState?): BlockState {
-        val side = if(level == null) {
-            "ugly"
-        }else if (level!!.isClientSide){
-            "client"
-        } else {
-            "server"
-        }
         if (data.contains(STORED_ITEM_STACK_TAG)) {
             val itemList = data.getList(STORED_ITEM_STACK_TAG, 10)
             if (itemList.isEmpty()) {
@@ -66,21 +51,11 @@ class ItemReaderBlockEntity(blockPos: BlockPos, blockState: BlockState) : Mutabl
                 inventory.fromTag(itemList)
             }
         }
-
-        println("Load internal data called for $blockPos from $side, inventory ${this.inventory.getItem(0)}")
         return state ?: blockState
     }
 
     override fun saveInternalData(data: CompoundTag): CompoundTag {
         data.put(STORED_ITEM_STACK_TAG, inventory.createTag())
-        val side = if(level == null) {
-            "ugly"
-        }else if (level!!.isClientSide){
-            "client"
-        } else {
-            "server"
-        }
-        println("Save internal data called for $blockPos from $side, inventory ${this.inventory.getItem(0)}")
         return data
     }
 }

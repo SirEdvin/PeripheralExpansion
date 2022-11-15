@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "all": { "model": "peripheralexpansion:block/peripheral_casing" }
+  }
+}

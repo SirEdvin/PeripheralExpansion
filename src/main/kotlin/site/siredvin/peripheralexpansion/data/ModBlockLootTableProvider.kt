@@ -10,6 +10,7 @@ class ModBlockLootTableProvider(dataGenerator: FabricDataGenerator) : FabricBloc
         dropSelf(Blocks.ITEM_READER_PEDESTAL)
         dropSelf(Blocks.REALITY_FORGER)
         dropSelf(Blocks.REMOTE_OBSERVER)
+        dropSelf(Blocks.PERIPHERAL_CASING)
         dropOther(Blocks.FLEXIBLE_REALITY_ANCHOR, Items.AIR)
     }
 }

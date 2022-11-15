@@ -1,12 +1,15 @@
 package site.siredvin.peripheralexpansion.common.setup
 
-import site.siredvin.peripheralexpansion.common.blockentities.ItemReaderBlockEntity
 import site.siredvin.peripheralexpansion.common.blocks.FlexibleRealityAnchor
 import site.siredvin.peripheralexpansion.common.blocks.ItemReaderPedestal
 import site.siredvin.peripheralexpansion.ext.register
+import site.siredvin.peripheralium.common.blocks.BaseBlock
 import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
+import site.siredvin.peripheralium.util.BlockUtil
 
 object Blocks {
+    val PERIPHERAL_CASING = BaseBlock(BlockUtil.defaultProperties()).register("peripheral_casing")
+
     val REMOTE_OBSERVER = GenericBlockEntityBlock(
         { BlockEntityTypes.REMOTE_OBSERVER }, isRotatable = true, belongToTickingEntity = true
     ).register("remote_observer")

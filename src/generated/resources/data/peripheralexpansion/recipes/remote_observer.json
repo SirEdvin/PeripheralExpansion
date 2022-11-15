@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " R ",
+    "OPO",
+    "SSS"
+  ],
+  "key": {
+    "P": {
+      "item": "peripheralexpansion:peripheral_casing"
+    },
+    "R": {
+      "item": "minecraft:daylight_detector"
+    },
+    "O": {
+      "item": "minecraft:observer"
+    },
+    "S": {
+      "item": "minecraft:stone_slab"
+    }
+  },
+  "result": {
+    "item": "peripheralexpansion:remote_observer"
+  }
+}

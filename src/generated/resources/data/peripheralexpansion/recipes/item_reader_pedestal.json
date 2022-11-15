@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " P ",
+    " P ",
+    "SSS"
+  ],
+  "key": {
+    "P": {
+      "item": "peripheralexpansion:peripheral_casing"
+    },
+    "S": {
+      "item": "minecraft:stone_slab"
+    }
+  },
+  "result": {
+    "item": "peripheralexpansion:item_reader_pedestal"
+  }
+}

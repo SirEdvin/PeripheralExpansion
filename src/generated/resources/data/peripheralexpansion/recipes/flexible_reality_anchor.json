@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DGD",
+    "GPG",
+    "DGD"
+  ],
+  "key": {
+    "P": {
+      "item": "peripheralexpansion:peripheral_casing"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "D": {
+      "item": "peripheralium:peripheralium_dust"
+    }
+  },
+  "result": {
+    "item": "peripheralexpansion:flexible_reality_anchor",
+    "count": 64
+  }
+}

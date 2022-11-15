@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " ID",
+    " SI",
+    "S  "
+  ],
+  "key": {
+    "I": {
+      "item": "peripheralium:peripheralium_dust"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "peripheralexpansion:ultimate_configurator"
+  }
+}
