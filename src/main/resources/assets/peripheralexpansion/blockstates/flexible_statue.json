@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "configured=true": { "model": "peripheralexpansion:block/flexible_statue" },
+    "configured=false": { "model": "peripheralexpansion:block/flexible_statue_empty" }
+  }
+}

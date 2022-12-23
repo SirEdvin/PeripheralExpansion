@@ -1,7 +1,9 @@
 package site.siredvin.peripheralexpansion.common.setup
 
 import site.siredvin.peripheralexpansion.common.blocks.FlexibleRealityAnchor
+import site.siredvin.peripheralexpansion.common.blocks.FlexibleStatue
 import site.siredvin.peripheralexpansion.common.blocks.ItemReaderPedestal
+import site.siredvin.peripheralexpansion.common.blocks.StatueWorkbench
 import site.siredvin.peripheralexpansion.ext.register
 import site.siredvin.peripheralium.common.blocks.BaseBlock
 import site.siredvin.peripheralium.common.blocks.GenericBlockEntityBlock
@@ -19,7 +21,11 @@ object Blocks {
     ).register("reality_forger")
 
     val FLEXIBLE_REALITY_ANCHOR = FlexibleRealityAnchor().register("flexible_reality_anchor")
+
     val ITEM_READER_PEDESTAL = ItemReaderPedestal().register("item_reader_pedestal")
+
+    val STATUE_WORKBENCH = StatueWorkbench().register("statue_workbench")
+    val FLEXIBLE_STATUE = FlexibleStatue().register("flexible_statue")
 
     fun doSomething() {
 

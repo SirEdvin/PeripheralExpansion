@@ -2,10 +2,7 @@ package site.siredvin.peripheralexpansion.common.setup
 
 import net.fabricmc.fabric.api.`object`.builder.v1.block.entity.FabricBlockEntityTypeBuilder
 import net.minecraft.world.level.block.entity.BlockEntityType
-import site.siredvin.peripheralexpansion.common.blockentities.FlexibleRealityAnchorTileEntity
-import site.siredvin.peripheralexpansion.common.blockentities.ItemReaderBlockEntity
-import site.siredvin.peripheralexpansion.common.blockentities.RealityForgerBlockEntity
-import site.siredvin.peripheralexpansion.common.blockentities.RemoteObserverBlockEntity
+import site.siredvin.peripheralexpansion.common.blockentities.*
 import site.siredvin.peripheralexpansion.ext.register
 import site.siredvin.peripheralium.common.blockentities.PeripheralBlockEntity
 
@@ -22,6 +19,12 @@ object BlockEntityTypes {
     val ITEM_READER = FabricBlockEntityTypeBuilder.create(
         {blockPos, blockState -> ItemReaderBlockEntity(blockPos, blockState)}, Blocks.ITEM_READER_PEDESTAL
     ).build().register("item_reader")
+    val STATUE_WORKBENCH = FabricBlockEntityTypeBuilder.create(
+        {blockPos, blockState -> StatueWorkbenchBlockEntity(blockPos, blockState)}, Blocks.STATUE_WORKBENCH
+    ).build().register("statue_workbench")
+    val FLEXIBLE_STATUE = FabricBlockEntityTypeBuilder.create(
+        {blockPos, blockState -> FlexibleStatueBlockEntity(blockPos, blockState)}, Blocks.FLEXIBLE_STATUE
+    ).build().register("flexible_statue")
 
     fun doSomething() {
 

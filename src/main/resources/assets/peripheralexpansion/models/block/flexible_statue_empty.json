@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "north": "peripheralexpansion:block/flexible_statue_empty",
+    "south": "peripheralexpansion:block/flexible_statue_empty",
+    "west": "peripheralexpansion:block/flexible_statue_empty",
+    "east": "peripheralexpansion:block/flexible_statue_empty",
+    "up": "peripheralexpansion:block/flexible_statue_empty",
+    "down": "peripheralexpansion:block/flexible_statue_empty",
+    "particle": "peripheralexpansion:block/flexible_statue_empty"
+  }
+}

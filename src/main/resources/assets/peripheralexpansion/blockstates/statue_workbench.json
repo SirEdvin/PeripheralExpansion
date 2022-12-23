@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "connected=false": {"model": "peripheralexpansion:block/statue_workbench"},
+    "connected=true": {"model": "peripheralexpansion:block/statue_workbench_connected"}
+  }
+}
